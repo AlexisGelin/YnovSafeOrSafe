@@ -39,6 +39,10 @@ public class PlayerController : MonoSingleton<PlayerController>
 
     void Update()
     {
+        PlayerData.Instance.Score = Mathf.RoundToInt(transform.position.x);
+
+        UIManager.Instance.RunningScreen.UpdateDistText();
+
         if (_action.Runner.Jump.triggered && _canJump)
         {
             _jump = true;
@@ -50,13 +54,6 @@ public class PlayerController : MonoSingleton<PlayerController>
         transform.position += Vector3.right * _speed * Time.fixedDeltaTime;
 
         Collider2D coll = Physics2D.OverlapCircle(UpdateFeetTransform(), 0.1f, _layer);
-
-        if (_jump)
-        {
-            rb.velocity = new Vector2(0, _jumpForce);
-            _jump = false;
-            _numberOfJumps--;
-        }
 
         if (coll && _jump == false)
         {
@@ -71,17 +68,28 @@ public class PlayerController : MonoSingleton<PlayerController>
         }
         else
         {
-            _animator.SetBool("jump", true);
             _canJump = false;
         }
+
+        if (_jump)
+        {
+            _animator.SetBool("jump", true);
+
+            rb.velocity = new Vector2(0, _jumpForce);
+            _jump = false;
+            _numberOfJumps--;
+        }
     }
-
-
 
     Vector2 UpdateFeetTransform()
     {
         _transformFeet.x = Feet.transform.position.x;
         _transformFeet.y = Feet.transform.position.y;
         return _transformFeet;
+    }
+
+    private void OnBecameInvisible()
+    {
+        GameManager.Instance.GameOver();
     }
 }
