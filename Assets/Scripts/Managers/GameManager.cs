@@ -6,15 +6,27 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    bool runStarted = false;
+
     private void Awake()
     {
+        LoadGame();
+
         UIManager.Instance.Init();
 
         LevelGenerator.Instance.Init();
 
-        LoadGame();
-
         Time.timeScale = 1;
+    }
+
+    void Update()
+    {
+        if (Input.anyKey && runStarted == false)
+        {
+            StartRunning();
+            runStarted = true;
+        }
+
     }
 
     public void ReloadScene()

@@ -17,15 +17,19 @@ public class PlayerController : MonoSingleton<PlayerController>
 
     [SerializeField] Rigidbody2D rb;
 
-    [SerializeField] GameObject Feet;
+    [SerializeField] GameObject _feet,_front;
 
     //Cache
     float horizontalMove = 0f;
     int _numberOfJumps;
     bool _jump = false;
     bool _canJump = true;
-    Vector2 _transformFeet;
+    Vector2 _transformFeet,_tranformFront;
     RunnerAction _action;
+
+    GameManager _gameManager;
+    PlayerData _playerData;
+    UIManager _uiManager;
 
     public void Init()
     {
@@ -35,13 +39,17 @@ public class PlayerController : MonoSingleton<PlayerController>
         _numberOfJumps = _maxNumberOfJumps;
 
         _animator.SetBool("walk", true);
+
+        _gameManager = GameManager.Instance;
+        _playerData = PlayerData.Instance;
+        _uiManager = UIManager.Instance;
     }
 
     void Update()
     {
-        PlayerData.Instance.Score = Mathf.RoundToInt(transform.position.x);
+        _playerData.Score = Mathf.RoundToInt(transform.position.x);
 
-        UIManager.Instance.RunningScreen.UpdateDistText();
+        _uiManager.RunningScreen.UpdateDistText();
 
         if (_action.Runner.Jump.triggered && _canJump)
         {
@@ -53,9 +61,16 @@ public class PlayerController : MonoSingleton<PlayerController>
     {
         transform.position += Vector3.right * _speed * Time.fixedDeltaTime;
 
-        Collider2D coll = Physics2D.OverlapCircle(UpdateFeetTransform(), 0.1f, _layer);
+        Collider2D collFeet = Physics2D.OverlapCircle(UpdateTransform(_feet,_transformFeet), 0.1f, _layer);
+        Collider2D collFront = Physics2D.OverlapCircle(UpdateTransform(_front, _tranformFront), 0.1f, _layer);
 
-        if (coll && _jump == false)
+
+        if (collFront)
+        {
+            _gameManager.GameOver();
+        }
+
+        if (collFeet && _jump == false)
         {
             _animator.SetBool("jump", false);
             _canJump = true;
@@ -80,16 +95,16 @@ public class PlayerController : MonoSingleton<PlayerController>
             _numberOfJumps--;
         }
     }
-
-    Vector2 UpdateFeetTransform()
+    
+    Vector2 UpdateTransform(GameObject GO,Vector2 transform)
     {
-        _transformFeet.x = Feet.transform.position.x;
-        _transformFeet.y = Feet.transform.position.y;
-        return _transformFeet;
+        transform.x = GO.transform.position.x;
+        transform.y = GO.transform.position.y;
+        return transform;
     }
 
     private void OnBecameInvisible()
     {
-        GameManager.Instance.GameOver();
+        _gameManager.GameOver();
     }
 }
