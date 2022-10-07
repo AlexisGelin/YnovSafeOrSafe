@@ -6,11 +6,14 @@ using UnityEngine;
 
 public class PlayerData : MonoSingleton<PlayerData>, ISavable
 {
-    [SerializeField] int score, highScore, coin, coinInTheRun;
+    [SerializeField] int score, highScore, coin, coinInTheRun,numberOfLevel;
+
+    public bool playerWin = false;
     public int Score { get => score; set => score = value; }
     public int HighScore { get => highScore; }
     public int Coin { get => coin; }
     public int CoinInTheRun { get => coinInTheRun; set => coinInTheRun = value; }
+    public int NumberOfLevel { get => numberOfLevel; set => numberOfLevel = value; }
 
     public void AddCoin(int amount)
     {
@@ -19,8 +22,6 @@ public class PlayerData : MonoSingleton<PlayerData>, ISavable
 
         UIManager.Instance.RunningScreen.UpdateCoinText();
     }
-
-
 
     public void CheckForHighScore()
     {
@@ -35,8 +36,8 @@ public class PlayerData : MonoSingleton<PlayerData>, ISavable
         var saveData = new PlayerSaveData()
         {
             Coin = coin,
-            HighScore = highScore
-
+            HighScore = highScore,
+            NumberOfLevel = NumberOfLevel
         };
 
         return saveData;
@@ -48,11 +49,12 @@ public class PlayerData : MonoSingleton<PlayerData>, ISavable
 
         highScore = saveData.HighScore;
         coin = saveData.Coin;
+        NumberOfLevel = saveData.NumberOfLevel;
     }
 }
 
 [Serializable]
 public class PlayerSaveData
 {
-    public int HighScore, Coin;
+    public int HighScore, Coin,NumberOfLevel;
 }

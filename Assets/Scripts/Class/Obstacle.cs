@@ -9,7 +9,7 @@ public class Obstacle : MonoBehaviour
     {
         if (collision.GetComponent<PlayerController>() != null)
         {
-            UIManager.Instance.GameOver();
+            UIManager.Instance.EndGame();
             PlayerController.Instance.enabled = false;
         }
     }

@@ -20,7 +20,6 @@ public class PlayerController : MonoSingleton<PlayerController>
     [SerializeField] GameObject _feet,_front;
 
     //Cache
-    float horizontalMove = 0f;
     int _numberOfJumps;
     bool _jump = false;
     bool _canJump = true;
@@ -67,7 +66,7 @@ public class PlayerController : MonoSingleton<PlayerController>
 
         if (collFront)
         {
-            _gameManager.GameOver();
+            _gameManager.EndGame();
         }
 
         if (collFeet && _jump == false)
@@ -105,6 +104,6 @@ public class PlayerController : MonoSingleton<PlayerController>
 
     private void OnBecameInvisible()
     {
-        _gameManager.GameOver();
+        if (_gameManager) _gameManager.EndGame();
     }
 }

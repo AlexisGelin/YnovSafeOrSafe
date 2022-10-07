@@ -11,12 +11,11 @@ public class UIManager : MonoSingleton<UIManager>
 
     public MenuScreen MenuScreen;
     public RunningScreen RunningScreen;
-    public GameOverScreen GameOverScreen;
+    public EndGameScreen EndGameScreen;
     public PauseScreen PauseScreen;
 
     // Cache
     CanvasGroup _actualCanvas;
-
 
     public void Init()
     {
@@ -43,9 +42,9 @@ public class UIManager : MonoSingleton<UIManager>
         ActiveScreen(RunningScreenCG, true);
         Time.timeScale = 1;
     }
-    public void GameOver()
+    public void EndGame()
     {
-        GameOverScreen.Init();
+        EndGameScreen.Init();
         ActiveScreen(GameOverScreenCG, true);
     }
 

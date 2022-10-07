@@ -10,13 +10,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Awake()
     {
-        LoadGame();
-
-        UIManager.Instance.Init();
-
         LevelGenerator.Instance.Init();
 
         Time.timeScale = 1;
+    }
+
+    private void Start()
+    {
+        LoadGame();
+
+        UIManager.Instance.Init();
     }
 
     void Update()
@@ -48,11 +51,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    public void GameOver()
+    public void EndGame()
     {
         PlayerData.Instance.CheckForHighScore();
 
-        UIManager.Instance.GameOver();
+        UIManager.Instance.EndGame();
 
         PlayerController.Instance.enabled = false;
 
@@ -61,12 +64,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SaveGame()
     {
-        SavingSystem.i.Save("saveSlot1");
+        SavingSystem.i.Save("saveSlot2");
     }
 
     public void LoadGame()
     {
-        SavingSystem.i.Load("saveSlot1");
+        SavingSystem.i.Load("saveSlot2");
     }
 
     void OnApplicationQuit()
